@@ -11,10 +11,12 @@ from numpy import *
 d = os.path.dirname(__file__)
 
 project_sizes = {}
+project_popularity = defaultdict(int)
 repo_data = {}
 already_seen = set()
 user_repos = defaultdict(list)
-ALPHA = 0.8
+ALPHA = 0.5
+BETA = 0.5
 
 def debug(s):
     sys.stderr.write("%s\n" % s)
@@ -24,6 +26,15 @@ def get_data(datafile=sys.stdin):
     user_repos = defaultdict()
     for line in datafile:
         user, repo = map(int, line.strip().split(':'))
+
+def normalize_dict(d):
+    max_val = 0
+    for key, value in d.iteritems():
+        if value > max_val:
+            max_val = value
+
+    for key, value in d.iteritems():
+        d[key] = value / float(max_val)
 
 def project_repos(repos, num_needed=10):
     cur_matrix = matrix(ndarray(shape=(len(repos), len(repo_data['lang_map'])),
@@ -41,15 +52,22 @@ def project_repos(repos, num_needed=10):
 
     pieces = cur_matrix * repo_data['repo_matrix']
 
+
     scores = []
+    scores_map = {}
     for i in range(len(repos)):
         score = 0
         for j in range(len(repo_data['lang_map'])):
             score += pieces[i, j]
         repo = repo_data['repo_map'][i]
+        scores_map[repo] = repo
 
-        scores.append((repo,
-                       score * ALPHA + project_sizes.get(repo, 0)))
+    normalize_dict(scores_map)
+    for repo, score in scores_map.iteritems():
+        score = BETA * (score * ALPHA + (ALPHA - 1) * project_sizes.get(repo, 0)) + \
+            (BETA - 1) * project_popularity[repo]
+        scores.append((repo, score))
+
 
     scores.sort(key=lambda x:x[1], reverse=True)
     result = []
@@ -69,6 +87,10 @@ def get_data():
         already_seen.add((user, repo))
         if repo in repo_map:
             user_repos[user].append(repo)
+        project_popularity[repo] += 1
+
+    normalize_dict(project_popularity)
+
     datafile.close()
 
 def get_repolangs():
@@ -104,6 +126,9 @@ def get_repolangs():
             value /= total
             lang_info[lang] = value
         all_repos[repo] = lang_info
+
+    normalize_dict(project_sizes)
+
     langs.close()
     repos = list(all_repos)
     repo_map = dict(((i, x) for i, x in enumerate(repos)))
@@ -196,3 +221,4 @@ if __name__ == '__main__':
         num_needed = 10 - len(repos)
         repos.extend(big_projects[:num_needed])
         print "%s:%s" % (user, ','.join(map(str, repos)))
+        sys.stdout.flush()
