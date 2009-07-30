@@ -43,7 +43,7 @@ def create_matrix(datafile=sys.stdin):
     for user, watches in users_watches.iteritems():
         user_rmap[i] = user
         user_map[user] = i
-        num = 1 / float(len(watches))
+        num = 1 #/ float(len(watches))
         for repo in watches:
             matrix[i, repo_map[repo]] = num
         i += 1
@@ -80,6 +80,7 @@ if __name__ == '__main__':
         user = int(line.strip())
         userid = user_map[user]
         print get_recommendations(full, piece, userid, user_rmap, repo_rmap)
+        sys.stdout.flush()
 
     debug('done!')
 
