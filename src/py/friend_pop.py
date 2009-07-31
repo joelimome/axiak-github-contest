@@ -4,6 +4,8 @@ Using friend's popularity markings...
 """
 import sys
 import os
+import psyco
+psyco.full()
 
 from collections import defaultdict
 
@@ -49,9 +51,9 @@ def get_suggestions(user, volume_data, data_info, user_rmap=lambda x: x, answerf
 
     user_num_repos = len(user_repos.get(user, ()))
 
-    for user, weight in volume_data.iteritems():
+    for new_user, weight in volume_data.iteritems():
         try:
-            cur_repos = user_repos[user]
+            cur_repos = user_repos[new_user]
         except KeyError:
             continue
 
@@ -59,11 +61,16 @@ def get_suggestions(user, volume_data, data_info, user_rmap=lambda x: x, answerf
             continue
 
         # There is nothing for this user to contribute.
-        if not (len(cur_repos) + user_num_repos - 2 * weight):
+        if len(cur_repos) + user_num_repos - 2 * weight == 0:
             continue
+            debug("Exiting due to complete overlap for %s" % user)
+            debug("(%s,%s) (%s,%s): %s" % (
+                    user_rmap(user), user_rmap(new_user),
+                    len(cur_repos), user_num_repos, weight))
+
 
         # Compute the weighting.
-        divisor = float((len(cur_repos) + user_num_repos - 2 * weight)**2)
+        divisor = float((len(cur_repos) + user_num_repos - 2 * weight))
 
         weight /= divisor
 

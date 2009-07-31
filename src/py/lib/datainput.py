@@ -1,5 +1,8 @@
 
 from collections import defaultdict
+import psyco
+psyco.full()
+
 
 class dictmap(dict):
     def __init__(self, *args, **kwargs):
