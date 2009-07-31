@@ -18,14 +18,31 @@ class dictmap(dict):
             self[elem] = id
             return id, True
 
-def get_datainfo(datafile):
+class dummydictmap(dictmap):
+    def addrow(self, elem):
+        return elem, False
+
+    def __getitem__(self, item):
+        return item
+
+    def __setitem__(self, key, value):
+        pass
+
+def get_datainfo(datafile, usermap=False):
     repo_pop = defaultdict(int)
 
-    user_map = dictmap()
-    user_rmap = {}
+    if usermap:
+        user_map = dictmap()
+        user_rmap = {}
 
-    repo_map = dictmap()
-    repo_rmap = {}
+        repo_map = dictmap()
+        repo_rmap = {}
+    else:
+        user_map = dummydictmap()
+        user_rmap = dummydictmap()
+
+        repo_map = dummydictmap()
+        repo_rmap = dummydictmap()
 
     user_repos = defaultdict(list)
 
@@ -45,9 +62,9 @@ def get_datainfo(datafile):
 
         repo_pop[repo] += 1
 
-        user_repos[user].append(repo)
+        user_repos[userid].append(repoid)
 
-        user_repo_set.add((user, repo))
+        user_repo_set.add((userid, repoid))
 
     return {
         'user_repos': user_repos,
