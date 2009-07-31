@@ -2,10 +2,11 @@
 # Used to see how we did.
 use strict;
 use warnings;
+use FindBin qw($Bin);
 
-my $reposfile = "../../input/repos.txt";
-my $datafile = "../../input/data.txt";
-my $langfile = "../../input/lang.txt";
+my $reposfile = "$Bin/../../input/repos.txt";
+my $datafile = "$Bin/../../input/data.txt";
+my $langfile = "$Bin/../../input/lang.txt";
 
 unless ($ARGV[0]) {
     print STDERR "Usage: $0 USER:repo1,repo2,...\n";
