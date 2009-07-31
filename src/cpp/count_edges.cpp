@@ -9,7 +9,7 @@
 
 using namespace boost;
 
-#define MIN_OVERLAP 3
+#define MIN_OVERLAP 1
 
 int main()
 {
@@ -63,7 +63,7 @@ int main()
 
   for (std::map<std::string, int>::iterator it = edge_counts.begin();
        it != edge_counts.end(); it ++) {
-    if (it->second < 3)
+    if (it->second < MIN_OVERLAP)
       continue;
     std::cout << it->first << ":" << it->second << std::endl;
   }

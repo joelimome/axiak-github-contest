@@ -46,6 +46,9 @@ def get_suggestions(user, volume_data, data_info, user_rmap=lambda x: x, answerf
 
     repo_scores = defaultdict(int)
     user_repos = data_info['user_repos']
+
+    user_num_repos = len(user_repos.get(user, ()))
+
     for user, weight in volume_data.iteritems():
         try:
             cur_repos = user_repos[user]
@@ -55,9 +58,18 @@ def get_suggestions(user, volume_data, data_info, user_rmap=lambda x: x, answerf
         if not cur_repos:
             continue
 
-        weight /= float(len(cur_repos))
+        # There is nothing for this user to contribute.
+        if not (len(cur_repos) + user_num_repos - 2 * weight):
+            continue
+
+        # Compute the weighting.
+        divisor = float((len(cur_repos) + user_num_repos - 2 * weight)**2)
+
+        weight /= divisor
 
         for repo in cur_repos:
+            if not answerfilter((user, repo)):
+                continue
             repo_scores[repo] += weight
 
     repos = repo_scores.items()
