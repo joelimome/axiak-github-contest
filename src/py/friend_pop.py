@@ -62,18 +62,16 @@ def get_suggestions(user, volume_data, data_info, user_rmap=lambda x: x, answerf
             continue
 
         # Compute the weighting.
-        divisor = float((len(cur_repos) + user_num_repos - 2 * weight))
+        weight = float((len(cur_repos) + user_num_repos - 2 * weight))
 
         # There is nothing for this user to contribute.
-        if divisor <= 0:
+        if weight <= 0:
             debug("Exiting due to complete overlap for %s" % user_rmap(user))
             debug("(%s,%s) (%s,%s): %s:: %s" % (
                     user_rmap(user), user_rmap(new_user),
                     len(cur_repos), user_num_repos, weight,
-                    divisor))
+                    weight))
             continue
-
-        weight /= divisor
 
         for repo in cur_repos:
             if not answerfilter((user, repo)):
