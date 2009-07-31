@@ -4,8 +4,8 @@ Using friend's popularity markings...
 """
 import sys
 import os
-import psyco
-psyco.full()
+#import psyco
+#psyco.full()
 
 from collections import defaultdict
 

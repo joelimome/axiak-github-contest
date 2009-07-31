@@ -1,7 +1,7 @@
 
 from collections import defaultdict
-import psyco
-psyco.full()
+#import psyco
+#psyco.full()
 
 
 class dictmap(dict):
