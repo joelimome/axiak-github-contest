@@ -4,20 +4,21 @@ Using friend's popularity markings...
 """
 import sys
 import os
-#import psyco
-#psyco.full()
+import time
+import psyco
+psyco.full()
+
 
 from collections import defaultdict
 
 from lib import datainput
+from lib import normalize
+from lib import loader
 
 datadir = os.path.join(os.path.dirname(__file__), '..', '..', 'input')
 
 def debug(s):
     sys.stderr.write("%s\n" % s)
-
-def load_tests(datafile=sys.stdin, usermap=lambda x: x):
-    return [usermap(int(line.strip())) for line in datafile]
 
 def get_friend_volume(tests, datafile=None, usermap=lambda x: x):
     test_set = set(tests)
@@ -39,7 +40,7 @@ def get_friend_volume(tests, datafile=None, usermap=lambda x: x):
 
     return volume_data
 
-def get_suggestions(user, volume_data, data_info, user_rmap=lambda x: x, answerfilter=lambda: True):
+def get_suggestions(user, volume_data, data_info, user_rmap=lambda x: x, answerfilter=lambda: True, repo_rmap=lambda x: x):
     try:
         volume_data = volume_data[user]
     except KeyError:
@@ -51,7 +52,7 @@ def get_suggestions(user, volume_data, data_info, user_rmap=lambda x: x, answerf
 
     user_num_repos = len(user_repos.get(user, ()))
 
-    for new_user, weight in volume_data.iteritems():
+    for new_user, weight in volume_data.items():
         try:
             cur_repos = user_repos[new_user]
         except KeyError:
@@ -60,17 +61,17 @@ def get_suggestions(user, volume_data, data_info, user_rmap=lambda x: x, answerf
         if not cur_repos:
             continue
 
-        # There is nothing for this user to contribute.
-        if len(cur_repos) + user_num_repos - 2 * weight == 0:
-            continue
-            debug("Exiting due to complete overlap for %s" % user)
-            debug("(%s,%s) (%s,%s): %s" % (
-                    user_rmap(user), user_rmap(new_user),
-                    len(cur_repos), user_num_repos, weight))
-
-
         # Compute the weighting.
         divisor = float((len(cur_repos) + user_num_repos - 2 * weight))
+
+        # There is nothing for this user to contribute.
+        if divisor <= 0:
+            debug("Exiting due to complete overlap for %s" % user_rmap(user))
+            debug("(%s,%s) (%s,%s): %s:: %s" % (
+                    user_rmap(user), user_rmap(new_user),
+                    len(cur_repos), user_num_repos, weight,
+                    divisor))
+            continue
 
         weight /= divisor
 
@@ -79,8 +80,14 @@ def get_suggestions(user, volume_data, data_info, user_rmap=lambda x: x, answerf
                 continue
             repo_scores[repo] += weight
 
+    normalize.normalize_dict(repo_scores)
     repos = repo_scores.items()
     repos.sort(key=lambda x: x[1], reverse=True)
+    return "%s:%s" % (
+        user_rmap(user),
+        ','.join(["%s;%s" % x for x in repos[:100]])
+        )
+
     answer = []
     for repo in repos:
         repo = repo[0]
@@ -100,18 +107,20 @@ def main():
     data_info = datainput.get_datainfo(datafile)
     datafile.close()
 
-    usermap = lambda x: data_info['user_map'].get(x, -1)
-    user_rmap = lambda x: data_info['user_rmap'].get(x, -1)
+    usermap = data_info['user_map'].__getitem__
+    user_rmap = data_info['user_rmap'].__getitem__
+    repo_rmap = data_info['repo_rmap'].__getitem__
     answerfilter = lambda x: x not in data_info['user_repo_set']
 
-    tests = load_tests(usermap=usermap)
+    tests, test_data = loader.load_tests(usermap=usermap)
 
     volume_data = get_friend_volume(tests, usermap=usermap)
 
     for user in tests:
         print get_suggestions(user, volume_data, data_info,
                               user_rmap=user_rmap,
-                              answerfilter=answerfilter)
+                              answerfilter=answerfilter,
+                              repo_rmap=repo_rmap)
         sys.stdout.flush()
 
 
