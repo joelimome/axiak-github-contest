@@ -17,17 +17,19 @@ int main()
   std::map<std::string, int> doc_node_set;
   std::map<std::string, std::vector<std::string> > doc_nodes;
 
+  /*
   std::ifstream datafile("../../input/data.txt");
-  //std::ifstream datafile("data.txt");
+  std::ifstream datafile("data.txt");
 
   if (!datafile) {
     std::cerr << "No data.txt file" << std::endl;
     return EXIT_FAILURE;
   }
+  */
 
   int j=0;
 
-  for (std::string line; std::getline(datafile, line);) {
+  for (std::string line; std::getline(std::cin, line);) {
     if (line.rfind(":") == std::string::npos)
       continue;
 
@@ -44,7 +46,7 @@ int main()
       int cmp = user.compare(*it);
       if (!cmp)
         continue;
-      if (cmp < 0) {
+      if (cmp > 0) {
         edge << *it << ":" << user;
       }
       else {
