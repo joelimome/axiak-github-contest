@@ -17,10 +17,18 @@ def load_tests(datafile=sys.stdin, usermap=lambda x: x):
             user = usermap(int(user))
         except:
             pass
-        data = data.split(',')
         result.append(user)
+
+        if not data.strip():
+            continue
+
+        data = data.split(',')
+
         for item in data:
-            repo, score = item.split(';', 1)
+            try:
+                repo, score = item.split(';', 1)
+            except:
+                raise Exception("%s %s" % (user, item))
             input_data[user][int(repo)] = float(score)
 
     return result, input_data
