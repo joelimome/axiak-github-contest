@@ -17,5 +17,7 @@ struct DimInfo {
 
 DimInfo * generate_dims(ifstream *datafile);
 
+void destroy_dims(DimInfo *);
+
 #endif
 

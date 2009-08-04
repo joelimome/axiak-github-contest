@@ -16,7 +16,7 @@
 using namespace std;
 using namespace arma;
 
-fmat * construct_doc_matrix (DimInfo * dims);
+arma::fmat * construct_doc_matrix (DimInfo * dims, ifstream * datafile);
 
 int main()
 {
@@ -27,19 +27,20 @@ int main()
   cout << dims->user_to.size() << endl;
   cout << dims->repos_to.size() << endl;
 
-  fmap *A = construct_doc_matrix(dims, &datafile);
+  arma::fmat *A = construct_doc_matrix(dims, &datafile);
 
+  destroy_dims(dims);
 
   return 0;
 }
 
+fmat * construct_doc_matrix (DimInfo * dims, ifstream * datafile) {
 
-fmat * construct_doc_matrix (DimInfo * dims, *ifstream datafile) {
+  dimmap user_to = dims->user_to;
+  dimmap repos_to = dims->repos_to;
+  intmap user_counts = dims->user_counts;
 
-  dimmap *user_to = &dims->user_to;
-  dimmap *repos_to = &dims->repos_to;
-
-  fmat *A = new fmat(user_to->size(), repos_to->size());
+  arma::fmat A(user_to.size(), repos_to.size());
 
   A.zeros();
 
@@ -59,9 +60,9 @@ fmat * construct_doc_matrix (DimInfo * dims, *ifstream datafile) {
     int userid = user_to[user];
     int repoid = repos_to[repo];
 
-    
+    A(userid, repoid) = 1.0 / user_counts[userid];
+  }
 
-  return A;
-
+  return &A;
 }
 
