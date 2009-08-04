@@ -1,0 +1,3500 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title>Armadillo: C++ linear algebra library</title>
+  <link type="text/css" rel="stylesheet" href="style.css">
+</head>
+<body>
+<center>
+<table style="text-align: left; width: 80%; margin-left: auto; margin-right: auto;" border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td style="vertical-align: top;">
+
+<table style="text-align: left; width: 100%;" border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td>
+<h2>
+<b>Reference for Armadillo 0.6.12</b>
+</h2>
+<td>
+<td style="text-align: right; vertical-align: top;">
+<b><a href="http://arma.sourceforge.net">to Armadillo home page</a></b>
+<td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div style="text-align: justify;">
+<br>
+<br>
+
+
+<!-- BEGIN CONTENT -->
+
+
+<font size=-1>
+(if something needs to be clarified or fixed in this documentation, 
+the <a href="http://arma.sourceforge.net/contact.html">developers</a> are interested in hearing about it)
+</font>
+<br>
+<br>
+<br>
+<b>Matrix Classes and Member Functions</b>
+<ul>
+<a href="#Mat">Mat&lt;<i>type</i>&gt;, mat and cx_mat</a>&nbsp;&middot;
+<a href="#diag">diag</a>&nbsp;&middot;
+<a href="#element">element&nbsp;access</a>&nbsp;&middot;
+<a href="#fill">fill</a>&nbsp;&middot;
+<a href="#n_rows">n_rows/n_cols/n_elem</a>&nbsp;&middot;
+<a href="#operators">operators</a>&nbsp;&middot;
+<a href="#print">print</a>&nbsp;&middot;
+<a href="#raw_print">raw_print</a>&nbsp;&middot;
+<a href="#reset">reset</a>&nbsp;&middot;
+<a href="#save_load">save/load</a>&nbsp;&middot;
+<a href="#set_size">set_size</a>&nbsp;&middot;
+<a href="#sub-matrix">sub-matrix&nbsp;views</a>&nbsp;&middot;
+<a href="#swap_rows">swap_rows/cols</a>&nbsp;&middot;
+<a href="#zeros_member">zeros</a>
+</ul>
+<br>
+
+<b>Vector Classes</b>
+<ul>
+<a href="#Col">Col&lt;<i>type</i>&gt;, colvec and vec</a>&nbsp;&middot;
+<a href="#Row">Row&lt;<i>type</i>&gt;, rowvec</a>
+</ul>
+<br>
+
+<b>Other Classes</b>
+<ul>
+<a href="#field">field&lt;<i>object type</i>&gt;</a>&nbsp;&middot;
+<a href="#running_stat">running_stat&lt;<i>type</i>&gt;</a>&nbsp;&middot;
+<a href="#wall_clock">wall_clock</a>
+</ul>
+<br>
+
+<b>Generated Vectors/Matrices</b>
+<ul>
+<a href="#eye">eye</a>&nbsp;&middot;
+<a href="#linspace">linspace</a>&nbsp;&middot;
+<a href="#ones">ones</a>&nbsp;&middot;
+<a href="#rand_randn">rand/randn</a>&nbsp;&middot;
+<a href="#zeros_standalone">zeros</a>
+</ul>
+<br>
+
+<b>Functions Individually Applied to Each Element of a Matrix</b>
+<ul>
+<a href="#abs">abs</a>&nbsp;&middot;
+<a href="#misc_fns">misc functions (exp, log, log10, pow, sqrt, square)</a>&nbsp;&middot;
+<a href="#trig_fns">trigonometric functions (cos, sin, ...)</a>
+</ul>
+<br>
+
+<b>Scalar Valued Functions of Vectors/Matrices</b>
+<ul>
+<a href="#accu">accu</a>&nbsp;&middot;
+<a href="#det">det</a>&nbsp;&middot;
+<a href="#dot">dot/norm_dot</a>&nbsp;&middot;
+<a href="#norm">norm</a>&nbsp;&middot;
+<a href="#trace">trace</a>
+</ul>
+<br>
+
+<b>Scalar/Vector Valued Functions of Vectors/Matrices</b>
+<ul>
+<a href="#min_and_max">min/max</a>&nbsp;&middot;
+<a href="#sum">sum</a>&nbsp;&middot;
+<a href="#stats_fns">statistics (mean, stddev, ...)</a>
+</ul>
+<br>
+
+<b>Vector/Matrix Valued Functions of Vectors/Matrices</b>
+<ul>
+<a href="#conv_to">conv_to</a>&nbsp;&middot;
+<a href="#conj">conj</a>&nbsp;&middot;
+<a href="#diagmat">diagmat</a>&nbsp;&middot;
+<a href="#htrans">htrans</a>&nbsp;&middot;
+<a href="#imag_real">imag/real</a>&nbsp;&middot;
+<a href="#reshape">reshape</a>&nbsp;&middot;
+<a href="#sort">sort</a>&nbsp;&middot;
+<a href="#sort_index">sort_index</a>&nbsp;&middot;
+<a href="#trans">trans</a>
+</ul>
+<br>
+
+<b>Decompositions, Inverse and Related Functions</b>
+<ul>
+<a href="#chol">chol</a>&nbsp;&middot;
+<a href="#eig_sym">eig_sym</a>&nbsp;&middot;
+<a href="#eig_gen">eig_gen</a>&nbsp;&middot;
+<a href="#inv">inv</a>&nbsp;&middot;
+<a href="#lu">lu</a>&nbsp;&middot;
+<a href="#qr">qr</a>&nbsp;&middot;
+<a href="#solve">solve</a>&nbsp;&middot;
+<a href="#svd">svd</a>
+</ul>
+<br>
+
+<b>Miscellaneous</b>
+<ul>
+<a href="#math_constants">math constants (pi, ...)</a>&nbsp;&middot;
+<a href="#phys_constants">physical constants (speed of light, ...)</a>&nbsp;&middot;
+<a href="#log_add">log_add</a>&nbsp;&middot;
+<a href="#s32_u32">s32/u32</a>&nbsp;&middot;
+<a href="#cx_float">cx_float/cx_double</a>
+</ul>
+<br>
+
+<br>
+<br>
+<hr>
+<hr>
+<br>
+<br>
+<font size=+1><b>Matrix Classes and Member Functions</b></font>
+<br>
+<br>
+<hr>
+<br>
+
+<a name="Mat"></a><b>Mat&lt;</b><i>type</i><b>&gt;</b>
+<br><b>mat</b>
+<br><b>cx_mat</b>
+<ul>
+<li>
+The root template matrix class is <b>Mat&lt;</b><i>type</i><b>&gt;</b>, where <i>type</i> can be one of:
+<i>char</i>, <i>int</i>, <i>float</i>, <i>double</i>, <i>std::complex&lt;double&gt;</i>, etc.
+</li>
+<br>
+<li>
+For convenience the following typedefs have been defined:
+<ul>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+      s32, u32
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      signed int, unsigned int (32 bits wide)
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      cx_float, cx_double
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      std::complex&lt;float&gt;, std::complex&lt;double&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      imat
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Mat&lt;s32&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      umat
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Mat&lt;u32&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      fmat
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Mat&lt;float&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      mat
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Mat&lt;double&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      cx_fmat
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Mat&lt;cx_float&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      cx_mat
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Mat&lt;cx_double&gt;
+      </td>
+    </tr>
+  </tbody>
+</table>
+</ul>
+</li>
+<br>
+<li>
+Data is stored with column-major ordering (i.e. column by column).
+</li>
+<br>
+<li>
+Functions which are wrappers for LAPACK or ATLAS functions (generally matrix decompositions) are only valid for the following types:
+<i>fmat</i>, <i>mat</i>, <i>cx_fmat</i>, <i>cx_mat</i>.
+</li>
+<br>
+<li>
+<b>
+In this documentation the <i>mat</i> type is used for convenience.
+It is possible to use other types instead, e.g. <i>fmat</i>.
+</b>
+</li>
+<br>
+<li>
+Constructors:
+<ul>
+<li>mat()</li>
+<li>mat(n_rows, n_cols)</li>
+<li>mat(mat)</li>
+<li>mat(rowvec)</li>
+<li>mat(colvec)</li>
+<li>cx_mat(mat,mat) &nbsp; (for constructing a complex matrix out of two real matrices)</li>
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5,5);
+double x = A(1,2);
+mat B = A + A;
+mat C = A * B;
+mat D = A % B;
+B.zeros();
+B.set_size(10,10);
+B.zeros(10,10);
+
+cx_mat X(A,B);
+</pre>
+</ul>
+</li>
+<br>
+<li><b>Caveat:</b>
+For mathematical correctness, scalars are treated as 1x1 matrices
+during initialisation.
+As such, the code below will <b>not</b> generate a 5x5 matrix with
+every element equal to 123.0:
+                    <ul>
+                      <pre>mat A(5,5);<br>A = 123.0;<br></pre>
+                    </ul>
+Use the following code instead:
+<ul>
+<pre>
+mat A(5,5);
+A.fill(123.0);
+</pre>
+</ul>
+Or:
+<ul>
+<pre>
+mat A = 123.0 * ones&lt;mat&gt;(5,5);
+</pre>
+</ul>
+</ul>
+<br>
+<hr><br>
+
+<a name="diag"></a>
+<b>.diag(k=0)</b>
+<ul>
+<li>
+Access the <i>k</i>-th diagonal in a matrix.
+The argument <i>k</i> is optional.
+By default the main diagonal is accessed (<i>k=0</i>).
+For <i>k &gt; 0</i>, the <i>k</i>-th super-diagonal is accessed (top-right corner).
+For <i>k &lt; 0</i>, the <i>k</i>-th sub-diagonal is accessed (bottom-left corner).
+An extracted a diagonal is interpreted as a column vector.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat    X = rand&lt;mat&gt;(5,5);
+colvec a = X.diag();
+colvec b = X.diag(1);
+colvec c = X.diag(-2);
+X.diag() = rand&lt;colvec&gt;(5);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="element"></a>
+<b>element/object access via (), [] and .at()</b>
+<ul>
+<li>
+Provide access to individual elements or objects stored in a container
+object (i.e., <i>mat</i>, <i>colvec</i>, <i>rowvec</i>, <i>field</i>).<br>
+                    <br>
+<ul>
+                    <table style="text-align: left; width: 100%;"
+ border="0" cellpadding="2" cellspacing="2">
+                      <tbody>
+                        <tr>
+                          <td style="vertical-align: top;">
+                          <pre>(n)</pre>
+                          </td>
+                          <td style="vertical-align: top;">&nbsp;<br>
+                          </td>
+                          <td style="vertical-align: top;">For colvec
+and
+rowvec, access the n-th element. For mat and field,
+access the n-th element/object under the assumption of a flat layout,
+with column-major ordering of data (i.e. column by column).
+An exception is thrown if the requested element is out of bounds.
+The bounds check can be optionally disabled if the ARMA_NO_DEBUG or NDEBUG macro is defined.<br>
+                          <br>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top;">
+                          <pre>[n]</pre>
+                          </td>
+                          <td style="vertical-align: top;"><br>
+                          </td>
+                          <td style="vertical-align: top;">As for (n),
+but without a bounds check. Not recommended for use unless your code
+has been thoroughly debugged.<br>
+                          <br>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top;">
+                          <pre>(i,j)</pre>
+                          </td>
+                          <td style="vertical-align: top;"><br>
+                          </td>
+                          <td style="vertical-align: top;">
+For mat and field classes, access the element/object stored at the i-th row and j-th column.
+An exception is thrown if the requested element is out of bounds.
+The bounds check can be optionally disabled if the ARMA_NO_DEBUG or NDEBUG macro is defined.
+<br>
+                          <br>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top;">
+                          <pre>.at(i,j)</pre>
+                          </td>
+                          <td style="vertical-align: top;"><br>
+                          </td>
+                          <td style="vertical-align: top;">As for
+(i,j),
+but without a bounds check. Not recommended for use unless your code
+has been thoroughly debugged.</td>
+                        </tr>
+                      </tbody>
+                    </table>
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(10,10);
+A(9,9) = 123.0;
+double x = A.at(9,9);
+double y = A[99];
+
+colvec p = rand&lt;colvec&gt;(10,1);
+p(9) = 123.0;
+double z = p[9];
+</pre>
+</ul>
+</li>                  
+</ul>
+<br>
+<hr><br>
+
+<a name="fill"></a> <b>.fill(value)</b>
+                  <ul>
+<li>Sets the elements to a specified value.
+The type of value must match the type of elements used by the container object
+(e.g. for <i>mat</i> the type is double).
+</li>
+<br>
+<li>
+Member function of <i>mat</i>, <i>colvec</i> and <i>rowvec</i> classes.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A(5,5);
+A.fill(123.0);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="n_rows"></a>
+
+
+<table style="text-align: left; width: 100%;" border="0" cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td>
+<b>.n_rows</b>
+</td>
+<td>
+(number of rows)
+</td>
+</tr>
+<tr>
+<td>
+<b>.n_cols</b>
+</td>
+<td>
+(number of columns)
+</td>
+</tr>
+<tr>
+<td>
+<b>.n_elem</b>
+</td>
+<td>
+(number of elements)
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<ul>
+<li>Read-only member variables of <i>mat</i>, <i>colvec</i>, <i>rowvec</i> and <i>field</i> classes.</li>
+<br>
+<li>The variables are of type <i>u32</i> (unsigned integer).</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+colvec q(5);
+cout &lt;&lt; "q has " &lt;&lt; q.n_cols &lt;&lt; " columns" &lt;&lt; endl;
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="operators"></a> <b>operators + - * / % == != &lt;= &gt;= &lt; &gt;</b>
+<ul>
+<li>
+Overloaded operators for <i>mat</i>, <i>colvec</i> and <i>rowvec</i> classes.
+</li>
+<br>
+<li>
+Meanings:
+<br>
+<br>
+<ul>
+                  <table style="text-align: left; width: 100%;"
+ border="0" cellpadding="2" cellspacing="2">
+                    <tbody>
+                      <tr>
+                        <td style="vertical-align: top;"><b>+</b></td>
+                        <td style="vertical-align: top;">&nbsp;&nbsp;&nbsp;<br>
+                        </td>
+                        <td style="vertical-align: top;">Addition of two objects</td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>-</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">Subtraction of one object from another or negation of an object</td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>/</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">Element-wise division of an object by another object or a scalar</td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>*</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">Matrix multiplication of two objects</td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>%</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">Element-wise multiplication of two objects (Schur product)</td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>==</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">Element-wise equality evaluation of two objects. Generates a matrix of type <i>umat</i> with entries that indicate whether at a given position the two elements from the two objects are equal (1) or not equal (0).</td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>!=</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">Element-wise non-equality evaluation of two objects.</td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>&gt;=</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">As for ==, but the check is for "greater than or equal to".</td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>&lt;=</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">As for ==, but the check is for "less than or equal to".</td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>&gt;</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">As for ==, but the check is for "greater than".</td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>&lt;</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">As for ==, but the check is for "less than".</td>
+                      </tr>
+                    </tbody>
+                  </table>
+</ul>
+</li>
+<br>
+<li>
+An exception is thrown if incompatible object sizes are used.
+</li>
+<br>
+<li>
+If the +, - and % operators are chained, Armadillo will try to avoid
+the generation of temporaries. No temporaries are
+generated if all given objects are of the same type and size.
+</li>
+<br>
+<li>
+If the * operator is chained, Armadillo will try to find an
+efficient ordering of the matrix multiplications.
+</li>
+<br>
+<li>
+<b>Caveat:</b> operators involving an equality comparison (i.e., ==, !=, &gt;=, &lt;=)
+may not work as expected for floating point element types (i.e., <i>float</i>, <i>double</i>)
+due to the necessarily limited precision of these types.
+In other words, these operators are not recommended for matrices of type <i>mat</i> or <i>fmat</i>.
+</li>
+<br>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5,10);
+mat B = rand&lt;mat&gt;(5,10);
+mat C = rand&lt;mat&gt;(10,5);
+
+mat P = A + B;
+mat Q = A - B;
+mat R = -B;
+mat S = A / 123.0;
+mat T = A % B;
+mat U = A * C;
+
+// V is constructed without temporaries
+mat V = A + B + A + B;
+
+imat AA = "1 2 3; 4 5 6; 7 8 9;";
+imat BB = "3 2 1; 6 5 4; 9 8 7;";
+
+// compare elements
+umat ZZ = (AA >= BB);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="print"></a>
+<b>.print(header="")</b>
+<br><b>.print(stream, header="")</b>
+<ul>
+<li>
+Member function of <i>mat</i>, <i>colvec</i> and <i>rowvec</i>.
+</li>
+<br>
+<li>
+The first form prints the contents of an object to the <i>cout</i> stream, with an optional header line.
+The second form prints to a user specified stream.
+</li>
+<br>
+<li>
+It's also possible print objects using the &lt;&lt; stream operator.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5,5);
+mat B = rand&lt;mat&gt;(6,6);
+
+A.print();
+
+// "B =" is the optional header line
+B.print("B =");
+
+cout &lt;&lt; A &lt;&lt; endl;
+cout &lt;&lt; "B =" &lt;&lt; endl &lt;&lt; B &lt;&lt; endl;
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="raw_print"></a>
+<b>.raw_print(header="")</b>
+<br><b>.raw_print(stream, header="")</b>
+<ul>
+<li>
+Member function of <i>mat</i>, <i>colvec</i> and <i>rowvec</i>.
+</li>
+<br>
+<li>
+Similar to the <a href="#print">.print()</a> member function.
+The difference is that no formatting of the output is done -- i.e. the user can set the stream's parameters
+such as precision, cell width, etc.
+</li>
+<br>
+<li>
+If the cell width is set to zero, a space is printed between the elements.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand<mat>(5,5);
+
+cout.precision(11);
+cout.setf(ios::fixed);
+
+A.raw_print(cout, "A =");
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="reset"></a>
+<b>
+.reset()
+</b>
+<ul>
+<li>
+Member function of <i>field</i>, <i>mat</i>, <i>colvec</i>, <i>rowvec</i>.
+</li>
+<br>
+<li>
+Causes an object to have no elements.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5, 5);
+A.reset();
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="save_load"></a>
+<b>
+.save(name, file_type = arma_binary)
+<br>
+.load(name, file_type = auto_detect)
+</b>
+<ul>
+<li>
+Store/retrieve data in files
+</li>
+<br>
+<li>Member functions of <i>mat</i>, <i>colvec</i>, <i>rowvec</i> classes</li>
+<br>
+<li>load() will reset the object to have no elements if the loading process failed (e.g. wrong filename, unsupported format, etc).</li>
+<br>
+<li>
+The following file formats are supported:
+<br>
+<br>
+<ul>
+                  <table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+                    <tbody>
+                      <tr>
+                        <td style="vertical-align: top;"><b>auto_detect</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+load(): try to automatically detect the matrix format type as one of the formats described below.
+This is the default operation.
+<br>
+<br>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>raw_ascii</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+Numerical data stored in raw ASCII format (no header),
+with the numbers separated by white space.
+The number of columns must be the same in each row.
+load() can read data which was saved in Matlab/Octave using the <i>-ascii</i> option, except for complex numbers.
+Complex numbers are stored in standard C++ notation (a tuple surrounded by brackets: e.g. (1.23,4.56) indicates 1.24&nbsp;+&nbsp;4.56i).
+<br>
+<br>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>arma_ascii</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+Numerical data stored in human readable text format, with a simple header to speed up loading.
+The header indicates the type of matrix as well as the number of rows and columns.
+<br>
+<br>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>arma_binary</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+Numerical data stored in machine dependent binary format, with a simple header to speed up loading.
+The header indicates the type of matrix as well as the number of rows and columns.
+<br>
+<br>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>pgm_binary</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+Image data stored in Portable Gray Map (PGM) format.
+Saving <i>int</i>, <i>float</i> or <i>double</i> matrices is a lossy operation, as each element of the matrix is copied and converted to an 8 bit representation.
+As such the matrix should have values in the [0,255] interval, otherwise the resulting image may not display correctly.
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+</li>
+</ul>
+<br>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5,5);
+
+// default save format is arma_binary
+A.save("A1.mat");
+A.save("A2.mat", arma_ascii);
+
+mat B;
+// automatically detect format type
+B.load("A1.mat");
+
+mat C;
+// force loading in the arma_ascii format
+C.load("A2.mat", arma_ascii);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="set_size"></a>
+                  <table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+                    <tbody>
+                      <tr>
+                        <td style="vertical-align: top;"><b>.set_size(n_elem)</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+(member function of <i>colvec</i>, <i>rowvec</i>, and <i>field</i>)
+<br>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>.set_size(n_rows,n_cols)</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+(member function of <i>mat</i> and <i>field</i>)
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+<br>  
+<ul>
+<li>Changes the size of an object.</li>
+<br>
+<li>
+If the old number of elements is equal to the requested number of elements, old memory is reused.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A;
+A.set_size(5,10);
+colvec q;
+q.set_size(100);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="sub-matrix"></a>
+<b>sub-matrix views</b>
+<ul>
+<li>A collection of member functions of <i>mat</i>, <i>colvec</i> and <i>rowvec</i> classes that provide sub-matrix views.<br>
+<br>
+<ul>
+.<b>row(&nbsp;</b>row_number&nbsp;<b>)</b><br>
+.<b>col(&nbsp;</b>column_number&nbsp;<b>)</b><br>
+.<b>rows(&nbsp;</b>first_row<b>,</b> last_row&nbsp;<b>)</b><br>
+.<b>cols(&nbsp;</b>first_column<b>,</b> last_column&nbsp;<b>)</b><br>
+.<b>submat(&nbsp;</b>first_row<b>,</b> first_column<b>,</b> last_row<b>,</b> last_column&nbsp;<b>)</b><br>
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = zeros&lt;mat&gt;(5,10);
+mat B = A.submat(0,1,2,3);
+A.submat(0,1,2,3) = rand&lt;mat&gt;(3,3);
+A.row(1) = rand&lt;mat&gt;(1,10);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="swap_rows"></a>
+<b>
+.swap_rows(row1, row2)
+<br>.swap_cols(col1, col2)
+</b>
+<ul>
+<li>
+Member function of <i>mat</i>, <i>colvec</i> and <i>rowvec</i> classes.
+</li>
+<br>
+<li>
+Swap the contents of specified rows or columns.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat X = rand&lt;mat&gt;(5,5);
+X.swap_rows(0,4);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr>
+
+<a name="zeros_member"></a>
+<br><b>.zeros()</b>
+<br><b>.zeros(n_rows,n_cols)</b>
+<br><b>.zeros(n_elem)</b>
+<ul>
+<li>
+Set the elements of an object to zero, optionally first resizing to specified dimensions
+</li>
+<br>
+<li>
+<i>.zeros()</i> and <i>.zeros(n_rows,n_cols)</i> are member functions of <i>Mat</i>
+</li>
+<br>
+<li>
+<i>.zeros()</i> and <i>.zeros(n_elem)</i> are member function of <i>Col</i> and <i>Row</i>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5,10);
+A.zeros();      // sets all elements to zero
+A.zeros(10,20); // sets the size to 10 columns and 20 rows
+                // followed by setting all elements to zero
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also: <a href="#zeros_standalone">zeros()</a> (stand alone function)
+</li>
+</ul>
+<br>
+<hr>
+
+<hr>
+<br>
+<br>
+<font size=+1><b>Vector Classes</b></font>
+<br>
+<br>
+<hr>
+<br>
+
+<a name="Col"></a><b>Col&lt;</b><i>type</i><b>&gt;</b>
+<br><b>colvec</b>
+<br><b>vec</b>
+<ul>
+<li>
+Classes for column vectors (matrices with one column).
+</li>
+<br>
+<li>The <b>Col&lt;</b><i>type</i><b>&gt;</b> class is derived from the <b>Mat&lt;</b><i>type</i><b>&gt;</b> class
+and inherits most of the member functions.
+</li>
+<br>
+<li>
+For convenience the following typedefs have been defined:
+<ul>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+      ivec, icolvec
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Col&lt;s32&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      uvec, ucolvec
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Col&lt;u32&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      fvec, fcolvec
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Col&lt;float&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      vec, colvec
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Col&lt;double&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      cx_fvec, cx_fcolvec
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Col&lt;cx_float&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      cx_vec, cx_colvec
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Col&lt;cx_double&gt;
+      </td>
+    </tr>
+  </tbody>
+</table>
+</ul>
+</li>
+<br>
+<li>
+<b>
+In this documentation the <i>colvec</i> type is used for convenience and to accentuate that it is a column vector.
+It is possible to use the <u>shorter version</u>, i.e. <u><i>vec</i></u>,
+as well as other types, e.g. <i>fvec</i>, <i>fcolvec</i>.
+</b>
+</li>
+<br>
+<li>
+Functions which take <i>Mat</i> as input can generally also take <i>Col</i> as input.
+Main exceptions are functions which require square matrices.
+</li>
+<br>
+<li>
+Constructors
+<ul>
+<li>colvec(n_elem=0)</li>
+<li>colvec(colvec)</li>
+<li>colvec(mat)</li>
+</ul>
+</li>
+<br>
+<li>
+An exception is thrown if the given matrix has more than one column.<br>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+colvec x(10);
+colvec y = zeros&lt;colvec&gt;(10,1);
+
+mat    A = rand&lt;mat&gt;(10,10);
+colvec z = A.col(5); // extract a column vector
+</pre>
+</ul>
+</li>
+<br>
+<li><b>Caveat:</b>
+For mathematical correctness, scalars are treated as 1x1 matrices
+during initialisation.
+As such, the code below will <b>not</b> generate a column vector with
+every element equal to 123.0:
+<ul>
+<pre>
+colvec q(5);
+q = 123.0;
+</pre>
+</ul>
+Use the following code instead:
+<ul>
+<pre>
+colvec q(5);
+q.fill(123.0);
+</pre>
+</ul>
+Or:
+<ul>
+<pre>
+colvec q = 123.0 * ones&lt;colvec&gt;(5,1);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="Row"></a>
+<b>Row&lt;</b><i>type</i><b>&gt;</b>
+<br><b>rowvec</b>
+<ul>
+<li>
+Classes for row vectors (matrices with one row)
+</li>
+<br>
+<li>The template <b>Row&lt;</b><i>type</i><b>&gt;</b> class is derived from the <b>Mat&lt;</b><i>type</i><b>&gt;</b> class
+and inherits most of the member functions.
+</li>
+<br>
+<li>
+For convenience the following typedefs have been defined:
+<ul>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+      irowvec
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Row&lt;s32&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      urowvec
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Row&lt;u32&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      frowvec
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Row&lt;float&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      rowvec
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Row&lt;double&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      cx_frowvec
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Row&lt;cx_float&gt;
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      cx_rowvec
+      </td>
+      <td style="vertical-align: top;">=<br>
+      </td>
+      <td style="vertical-align: top;">
+      Row&lt;cx_double&gt;
+      </td>
+    </tr>
+  </tbody>
+</table>
+</ul>
+</li>
+<br>
+<li>
+<b>
+In this documentation the <i>rowvec</i> type is used for convenience.
+It is possible to use other types instead, e.g. <i>frowvec</i>.
+</b>
+</li>
+<br>
+<li>
+Functions which take <i>Mat</i> as input can generally also take <i>Row</i> as input.
+Main exceptions are functions which require square matrices.
+</li>
+<br>
+<li>
+Constructors
+<ul>
+rowvec(n_elem=0)
+<br>rowvec(rowvec)
+<br>rowvec(mat)
+</ul>
+</li>
+<br>
+<li>
+An exception is thrown if the given matrix has more than one row.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+rowvec x(10);
+rowvec y = zeros&lt;mat&gt;(1,10);
+
+mat A = rand&lt;mat&gt;(10,10);
+rowvec z = A.row(5); // extract a row vector
+</pre>
+</ul>
+</li>
+<br>
+<li>
+<b>Caveat:</b>
+For mathematical correctness, scalars are treated as 1x1 matrices
+during initialisation.
+As such, the code below will <b>not</b> generate a row vector with
+every element equal to 123.0:
+<ul>
+<pre>
+rowvec r(5);
+r = 123.0;
+</pre>
+</ul>
+Use the following code instead:
+<ul>
+<pre>
+rowvec r(5);
+r.fill(123.0);
+</pre>
+</ul>
+Or:
+<ul>
+<pre>
+rowvec r = 123.0 * ones&lt;rowvec&gt;(1,5);
+</pre>
+</ul>
+</ul>
+<br>
+<hr>
+
+<hr>
+<br>
+<br>
+<font size=+1><b>Other Classes</b></font>
+<br>
+<br>
+<hr>
+<br>
+
+<a name="field"></a>
+<b>field&lt;</b><i>object type</i><b>&gt;</b>
+<ul>
+<li>
+Class for one and two dimensional fields of arbitrary objects
+</li>
+<br>
+<li>
+Constructors (where <i>object type</i> is another class, e.g. <i>mat</i>, <i>colvec</i>, <i>rowvec</i>, <i>std::string</i>, etc):
+<ul>
+field&lt;<i>object type</i>&gt;(n_elem=0)
+<br>field&lt;<i>object type</i>&gt;(n_rows, n_cols)
+<br>field&lt;<i>object type</i>&gt;(field&lt;<i>object type</i>&gt;)
+</ul>
+</li>
+<br>
+<li>Stored objects can be accessed via the () operator, or via the [] operator.
+</li>
+<br>
+<li>The () operator has a bounds check that can be optionally disabled if the ARMA_NO_DEBUG or NDEBUG macro is defined
+</li>
+<br>
+<li>
+The [] operator has no bounds check -- this not recommended for use unless your code has been thoroughly debugged
+</li>
+<br>
+<li>
+The field class has several member functions for accessing sub-fields:
+<ul>
+.<b>row(&nbsp;</b>row_number&nbsp;<b>)</b><br>
+.<b>col(&nbsp;</b>column_number&nbsp;<b>)</b><br>
+.<b>rows(&nbsp;</b>first_row<b>,</b> last_row&nbsp;<b>)</b><br>
+.<b>cols(&nbsp;</b>first_column<b>,</b> last_column&nbsp;<b>)</b><br>
+.<b>subfield(&nbsp;</b>first_row<b>,</b> first_column<b>,</b> last_row<b>,</b> last_column&nbsp;<b>)</b><br>
+</ul>
+</li>
+<br>
+<li>
+Fields with objects of type <i>mat</i>, <i>colvec</i>, <i>rowvec</i> and <i>std::string</i>
+can be saved or loaded via field's <b>.save()</b> and <b>.load()</b> member functions.
+The interface is similar to the <a href="#save_load">.save()/.load()</a> functions in the Mat class,
+with the main difference being that different file formats are supported:
+<br>
+<br>
+<ul>
+                  <table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+                    <tbody>
+                      <tr>
+                        <td style="vertical-align: top;"><b>auto_detect</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+<br>
+<li>
+load(): try to automatically detect the field format type as one of the formats described below.
+This is the default operation.
+</li>
+<br>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>arma_binary</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+<br>
+<li>
+Objects are stored in machine dependent binary format.
+<li>
+Default type for fields of type <i>mat</i>, <i>colvec</i> or <i>rowvec</i>.
+</li>
+<li>
+Only applicable to fields of type <i>mat</i>, <i>colvec</i> or <i>rowvec</i>.
+</li>
+<br>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>ppm_binary</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+<br>
+<li>
+Image data stored in Portable Pixmap Map (PPM) format.
+</li>
+<li>
+Only applicable to fields of type <i>mat</i>, <i>colvec</i> or <i>rowvec</i>.
+</li>
+<li>
+.load(): Loads the specified image and stores the red, green and blue components as three separate matrices.
+The resulting field is comprised of the three matrices,
+with the red, green and blue components in the first, second and third matrix, respectively.
+</li>
+<li>
+.save(): Saves a field with exactly three matrices of equal size as an image.
+It is assumed that the red, green and blue components are stored in the first, second and third matrix, respectively.
+Saving <i>int</i>, <i>float</i> or <i>double</i> matrices is a lossy operation,
+as each matrix element is copied and converted to an 8 bit representation.
+</li>
+
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+</ul>
+</li>
+<br>
+<li>
+Fields with objects of type <i>std::string</i> are saved and loaded as raw text files.
+The text files do not have a header.
+Each string is separated by a whitespace.
+The .load() function will only accept text files that have the same number of strings on each line.
+The strings can have variable lengths.
+</li>
+
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+// create a colvec field with 3 rows and 2 columns
+field&lt;colvec&gt; F(3,2);
+
+// access components of the field
+F(0,0) = colvec(5);
+F(1,1) = rand&lt;colvec&gt;(6);
+F(2,0).set_size(7);
+
+// access element 1 of the colvec stored at 2,0
+double x = F(2,0)(1);
+
+// copy rows
+F.row(0) = F.row(2);
+
+// extract a row of colvecs from F
+field&lt;colvec&gt; G = F.row(1);
+
+// print the field to the standard output
+G.print("G =");
+
+// save the field to a binary file
+G.save("colvec_field");
+
+
+// create a field of strings
+field&lt;std::string&gt; S(3,2);
+
+S(0,0) = "hello";
+S(1,0) = "there";
+
+// string fields can be saved as plain text files
+S.save("string_field");
+<br></pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="running_stat"></a>
+<b>running_stat&lt;</b><i>type</i><b>&gt;</b>
+<ul>
+<li>
+Class for keeping statistics of a continuously sampled process/signal.
+Useful if the storage of individual samples is not necessary or desired.
+Also useful if the number of samples is not known beforehand or exceeds 
+available memory.
+</li>
+<br>
+<li>
+<i>type</i> should be one of: <i>float</i>, <i>double</i>, <i>std::complex&lt;float&gt;</i>, <i>std::complex&lt;double&gt;</i>
+</li>
+<br>
+<li>
+Member functions:
+<ul>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+      <b>.operator()(</b>sample<b>)</b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      update the statistics so far using the given sample
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <b>.mean()</b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      get the mean or average value so far
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <b>.var(</b>norm_type=0<b>)</b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      get the variance so far
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <b>.stddev(</b>norm_type=0<b>)</b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      get the standard deviation so far
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <b>.min()</b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      get the minimum value so far
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <b>.max()</b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      get the maximum value so far
+      </td>
+    </tr>
+  </tbody>
+</table>
+</ul>
+</li>
+<br>
+<li>
+For the .var() and .stddev() functions, the default <i>norm_type=0</i> performs normalisation using N-1
+(where N is the number of samples so far),
+providing the best unbiased estimator.
+Using <i>norm_type=1</i> causes normalisation to be done using N, which provides the second moment around the mean.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+running_stat&lt;double&gt; stats;
+
+for(u32 i=0; i&lt;10000; ++i)
+  {
+  double sample = double(rand())/RAND_MAX;
+  stats(sample);
+  }
+
+cout &lt;&lt; "mean = " &lt;&lt; stats.mean() &lt;&lt; endl;
+cout &lt;&lt; "var  = " &lt;&lt; stats.var()  &lt;&lt; endl;
+cout &lt;&lt; "min  = " &lt;&lt; stats.min()  &lt;&lt; endl;
+cout &lt;&lt; "max  = " &lt;&lt; stats.max()  &lt;&lt; endl;
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="wall_clock"></a>
+<b>wall_clock</b>
+<ul>
+<li>
+Simple wall clock timer class, for measuring the number of elapsed seconds between two intervals.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+wall_clock timer;
+
+mat A = rand&lt;mat&gt;(4,4);
+mat B = rand&lt;mat&gt;(4,4);
+mat C;
+
+timer.tic();
+for(u32 i=0; i&lt;100000; ++i)
+  C = A + B + A + B;
+
+double n_secs = timer.toc();
+cout &lt;&lt; "took " &lt;&lt; n_secs &lt;&lt; " seconds" &lt;&lt; endl;
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr>
+
+<hr>
+<br>
+<br>
+<font size=+1><b>Generated Vectors/Matrices</b></font>
+<br>
+<br>
+<hr>
+<br>
+
+<a name="eye"></a>
+<b>eye(n_rows, n_cols)</b>
+<ul>
+<li>
+Generate the identity matrix (diagonal elements set to one and off-diagonal elements set to zero).
+</li>
+<br>
+<li>
+Usage:
+<ul>
+<li><i>matrix_type</i> X = eye&lt;<i>matrix_type</i>&gt;(n_rows, n_cols)
+</li>
+<li><i>n_rows</i> must be equal to <i>n_cols</i>
+</li>
+<li>Two arguments are used to make it explicitly clear that a square matrix is generated
+</li>
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = eye&lt;mat&gt;(5,5);
+mat B = 123.0 * eye&lt;mat&gt;(5,5);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="linspace"></a>
+<b>linspace(start, end, N, dim=0)</b>
+<ul>
+<li>
+Generate a vector with <i>N</i> elements.
+The values of the elements linearly increase from <i>start</i> upto (and including) <i>end</i>.
+<br>
+</li>
+<br>
+<li>
+<i>dim=0</i> indicates a column vector, while <i>dim=1</i> indicates a row vector.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+double start = 10.0;
+double end   = 20.0;
+u32    N     = 5;
+
+mat    X     = linspace(start, end, N);
+mat    Y     = linspace(start, end, N, 1);
+
+colvec q     = linspace(start, end, N);
+rowvec r     = linspace(start, end, N, 1);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="ones"></a>
+<b>
+ones(n_elem)
+<br>ones(n_rows, n_cols)
+</b>
+<ul>
+<li>
+Generate a vector or a matrix with all elements set to one.
+</li>
+<br>
+<li>
+Usage:
+<ul>
+<li><i>vector_type</i> v = ones&lt;<i>vector_type</i>&gt;(n_elem)</li>
+<li><i>matrix_type</i> X = ones&lt;<i>matrix_type</i>&gt;(n_rows, n_cols)</li>
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = ones&lt;mat&gt;(5,5);
+mat B = 123.0 * ones&lt;mat&gt;(5,5);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="rand_randn"></a>
+<b>rand(n_elem)</b> 
+<br><b>rand(n_rows,n_cols)</b>
+<br>
+<br><b>randn(n_elem)</b>
+<br><b>randn(n_rows,n_cols)</b>
+</b>
+<ul>
+<li>
+Generate a vector or a matrix with the elements set to random values.
+</li>
+<br>
+<li><i>rand()</i> uses a uniform distribution in the [0,1] interval.
+</li>
+<br>
+<li><i>randn()</i> uses a normal/Gaussian distribution with zero mean and unit variance.
+</li>
+<br>
+<li>
+Usage:
+<ul>
+<li><i>vector_type</i> v = rand&lt;<i>vector_type</i>&gt;(n_elem)</li>
+<li><i>matrix_type</i> X = rand&lt;<i>matrix_type</i>&gt;(n_rows,n_cols)</li>
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5,5);
+colvec q = rand&lt;colvec&gt;(5);
+rowvec r = rand&lt;rowvec&gt;(5);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="zeros_standalone"></a>
+<b>zeros(n_elem)</b>
+<br><b>zeros(n_rows,n_cols)</b>
+<ul>
+<li>
+Generate a vector or a matrix with the elements set to zero.
+</li>
+<br>
+<li>
+Usage:
+<ul>
+<li><i>vector_type</i> v = zeros&lt;<i>vector_type</i>&gt;(n_elem)</li>
+<li><i>matrix_type</i> X = zeros&lt;<i>matrix_type</i>&gt;(n_rows,n_cols)</li>
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = zeros&lt;mat&gt;(5,5);
+colvec q = zeros&lt;colvec&gt;(5);
+rowvec r = zeros&lt;rowvec&gt;(5);
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also: <a href="#zeros_member">.zeros()</a> (member function of Mat, Col and Row)
+</li>
+</ul>
+<br>
+<hr>
+
+<hr>
+<br>
+<br>
+<font size=+1><b>Functions Individually Applied to Each Element of a Matrix</b></font>
+<br>
+<br>
+<hr>
+<br>
+
+<a name="abs"></a>
+<b>abs(mat)</b>
+<br><b>abs(cx_mat)</b>
+<ul>
+<li>
+Obtain the magnitude of each element in a matrix
+</li>
+<br>
+<li>
+Usage for non-complex matrices:
+<ul>
+<li><i>matrix_type</i> Y = abs(X)</li>
+<li>X and Y must have the same <i>matrix_type</i></li>
+</ul>
+</li>
+<br>
+<li>
+Usage for complex matrices:
+<ul>
+<li><i>non_complex_matrix_type</i> Y = abs(X)</li>
+<li>X must be a have complex matrix type, e.g., <i>cx_mat</i> or <i>cx_fmat</i></li>
+<li>The type of Y must be related to the type of X,
+e.g., if X has the type <i>cx_mat</i>, then the type of Y must be <i>mat</i>
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5,5);
+mat B = abs(A); 
+
+cx_mat X = rand&lt;cx_mat&gt;(5,5);
+mat    Y = abs(X);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="misc_fns"></a>
+<b>misc functions (exp, log, log10, pow, sqrt, square)</b>
+<br>
+<ul>
+<li>
+Apply a function to each element of a matrix.
+</li>
+<br>
+<li>
+Usage:
+<ul>
+<li>
+<i>matrix_type</i> Y = misc_fn(X)
+</li>
+<li>
+X and Y must have the same <i>matrix_type</i>
+</li>
+<li>
+misc_fn(X) is one of:
+<ul>
+
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+  <tr>
+    <td style="vertical-align: top;">
+       exp(X)
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      base-e exponential of each element
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+       log(X)
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      natural log of each element
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+       log10(X)
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      base-10 log of each element
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+       pow(X, p)
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      raise each element to the power of p
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+       sqrt(X)
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      square root of each element
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      square(X)
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      square of each element
+    </td>
+  </tr>
+</tbody>
+</table>
+
+
+</ul>
+</li>
+
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat X = rand&lt;mat&gt;(5,5);
+mat Y = exp(X);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="trig_fns"></a>
+<b>trigonometric functions</b>
+<ul>
+<li>
+Apply a trigonometric function to each element of a matrix.
+</li>
+<br>
+<li>
+Usage:
+<ul>
+<li>
+<i>matrix_type</i> Y = trig_fn(X)
+</li>
+<li>
+X and Y must have the same <i>matrix_type</i>
+</li>
+<li>
+trig_fn is one of:
+<ul>
+<li>
+cos family: <i>cos</i>, <i>acos</i>, <i>cosh</i>, <i>acosh</i>
+</li>
+<li>
+sin family: <i>sin</i>, <i>asin</i>, <i>sinh</i>, <i>asinh</i>
+</li>
+<li>
+tan family: <i>tan</i>, <i>atan</i>, <i>tanh</i>, <i>atanh</i>
+</li>
+</ul>
+</li>
+
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat X = rand&lt;mat&gt;(5,5);
+mat Y = cos(X);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr>
+
+<hr>
+<br>
+<br>
+<font size=+1><b>Scalar Valued Functions of Vectors/Matrices</b></font>
+<br>
+<br>
+<hr>
+<br>
+
+<a name="accu"></a>
+<b>accu(mat)</b>
+<ul>
+<li>
+Accumulate (sum) all elements
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5,5);
+double x = accu(A);
+
+// % performs element-wise multiplication, hence
+// accu(A % B) is a "multiply-and-accumulate" operation
+mat B = rand&lt;mat&gt;(5,5);
+double y = accu(A % B);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+                  
+<a name="det"></a>
+<b>det(mat)</b>
+<ul>
+<li>
+Determinant of a square matrix.
+</li>
+<br>
+<li>
+An exception is thrown if the given matrix is not square.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5,5);
+double x = det(A);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="dot"></a>
+<b>dot(A, B)</b>
+<br><b>norm_dot(A, B)</b>
+<ul>
+<li>
+<i>dot(A,B):</i> dot product of A and B, under the assumption that A and B are vectors with the same number of elements
+</li>
+<br>
+<li>
+<i>norm_dot(A,B)</i>: normalised version of <i>dot(A,B)</i>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+colvec a = rand&lt;colvec&gt;(10);
+colvec b = rand&lt;colvec&gt;(10);
+
+double x = dot(a,b);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="norm"></a>
+<b>
+norm(X, p)
+</b>
+<ul>
+<li>
+Compute the p-norm of X, under the assumption that X is a vector.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+colvec q = rand&lt;colvec&gt;(5);
+double x = norm(q,2);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="trace"></a>
+<b>trace(mat)</b>
+<ul>
+<li>
+Sum of the diagonal elements of a square matrix.
+</li>
+<br>
+<li>
+An exception is thrown if the given matrix is not square.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5,5);
+double x = trace(A);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr>
+
+<hr>
+<br>
+<br>
+<font size=+1><b>Scalar/Vector Valued Functions of Vectors/Matrices</b></font>
+<br>
+<br>
+<hr>
+<br>
+
+<a name="min_and_max"></a>
+<b>min(mat, dim=0)</b>
+<br><b>min(rowvec)</b>
+<br><b>min(colvec)</b>
+<br>
+<br><b>max(mat, dim=0)</b>
+<br><b>max(rowvec)</b>
+<br><b>max(colvec)</b>
+<ul>
+<li>
+For a matrix argument, return the minimum/maximum value for each column (dim=0), or each row (dim=1).
+</li>
+<br>
+<li>
+For a vector argument, return the minimum/maximum value.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+colvec q = rand&lt;colvec&gt;(10,1);
+double x = max(q);
+
+mat A = rand&lt;mat&gt;(10,10);
+rowvec b = max(A);
+
+// same result as max(A)
+// the 0 explicitly indicates "along columns"
+rowvec c = max(A,0); 
+
+// the 1 explicitly indicates "along rows"
+colvec d = max(A,1);
+
+// find the overall maximum value
+double y = max(max(A));
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="sum"></a>
+<b>sum(mat, dim=0)</b>
+<br><b>sum(rowvec)</b>
+<br><b>sum(colvec)</b>
+<ul>
+<li>
+For a matrix argument, return the sum of elements in each column (dim=0), or each row (dim=1).
+</li>
+<br>
+<li>
+For a vector argument, return the sum of all elements.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+colvec q = rand&lt;colvec&gt;(10,1);
+double x = sum(q);
+
+mat A = rand&lt;mat&gt;(10,10);
+rowvec b = sum(A);
+
+// same result as sum(A)
+// the 0 explicitly indicates "along columns"
+rowvec c = sum(A,0);
+
+// 1 explicitly indicates "along rows"
+colvec d = sum(A,1);
+
+// find the overall sum
+double y = sum(sum(A));
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+
+<a name="stats_fns"></a>
+<b>statistics: mean, median, stddev, var</b>
+
+<ul>
+<table style="text-align: left;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+  <tr>
+    <td style="vertical-align: top;">
+       <b>mean(mat, dim=0)</b>
+       <br><b>mean(colvec)</b>
+       <br><b>mean(rowvec)</b>
+       <br>
+       <br>
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      mean (average value)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+       <b>median(mat, dim=0)</b>
+       <br><b>median(colvec)</b>
+       <br><b>median(rowvec)</b>
+       <br>
+       <br>
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      median
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+       <b>stddev(mat, norm_type=0, dim=0)</b>
+       <br><b>stddev(colvec, norm_type=0)</b>
+       <br><b>stddev(rowvec, norm_type=0)</b>
+       <br>
+       <br>
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      standard deviation
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+       <b>var(mat, norm_type=0, dim=0)</b>
+       <br><b>var(colvec, norm_type=0)</b>
+       <br><b>var(rowvec, norm_type=0)</b>
+       <br>
+       <br>
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      variance
+    </td>
+  </tr>
+</tbody>
+</table>
+<br>
+<li>
+For a matrix argument, find a particular statistic for each column (<i>dim=0</i>), or each row (<i>dim=1</i>)
+</li>
+<br>
+<li>
+For a vector argument, return a particular statistic calculated using all the elements of the vector.
+</li>
+<br>
+<li>
+For the var() and stddev() functions, the default <i>norm_type=0</i> performs normalisation using N-1 (where N is the number of samples),
+providing the best unbiased estimator.
+Using <i>norm_type=1</i> causes normalisation to be done using N, which provides the second moment around the mean.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A    = rand&lt;mat&gt;(5,5);
+mat B    = mean(A);
+mat C    = var(A);
+double m = mean(mean(A));
+
+colvec q = rand&lt;colvec&gt;(5);
+double v = var(q);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr>
+
+<hr>
+<br>
+<br>
+<font size=+1><b>Vector/Matrix Valued Functions of Vectors/Matrices</b></font>
+<br>
+<br>
+<hr>
+<br>
+
+<a name="conv_to"></a>
+<b>
+conv_to&lt;<i>matrix_type</i>&gt::from(X)
+</b>
+<ul>
+<li>
+Convert between matrix types (e.g. <i>mat</i> to <i>fmat</i>)
+</li>
+<br>
+<li>
+Conversion of <i>mat</i> into <i>colvec</i> or <i>rowvec</i> is only possible
+if the object has one column or one row, respectively.
+</li>
+<br>
+<li>
+Conversion of a matrix into a scalar is only possible for matrices with a size of 1x1.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat  A = rand&lt;mat&gt;(1,5);
+mat  B = rand&lt;mat&gt;(5,1);
+
+fmat C = conv_to&lt;fmat&gt;::from(A);
+
+double x = conv_to&lt;rowvec&gt;::from(A) * conv_to&lt;colvec&gt;::from(B);
+double y = conv_to&lt;double&gt;::from(A * B);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="conj"></a>
+<b>conj(cx_mat)</b>
+<ul>
+<li>
+Obtain the complex conjugate of each element in a complex matrix
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+cx_mat X = rand&lt;cx_mat&gt;(5,5);
+cx_mat Y = conj(X);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="diagmat"></a>
+<b>diagmat(mat)</b>
+<br><b>diagmat(rowvec)</b>
+<br><b>diagmat(colvec)</b>
+<ul>
+<li>
+Interpret a matrix or vector as a diagonal matrix.
+</li>
+<br>
+<li>
+For <i>mat</i>, given matrix must be square.  The main diagonal is copied and all other elements in the generated matrix are set to zero.
+</li>
+<br>
+<li>
+For <i>colvec</i> and <i>rowvec</i>, elements of the vector are placed on the main diagonal in the generated matrix and all other elements are set to zero.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5,5);
+mat B = diagmat(A);
+mat C = A*diagmat(A);
+
+rowvec q = rand&lt;rowvec&gt;(5);
+colvec r = rand&lt;colvec&gt;(5);
+mat X = diagmat(q)*diagmat(r);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="htrans"></a>
+<b>htrans(cx_mat)</b>
+<br><b>htrans(cx_colvec)</b>
+<br><b>htrans(cx_rowvec)</b>
+<ul>
+<li>
+Hermitian transpose
+</li>
+<br>
+<li>
+This operation is equivalent to taking the transpose and then taking the complex conjugate of each element
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+cx_mat A = rand&lt;cx_mat&gt;(5,10);
+cx_mat B = htrans(A);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="imag_real"></a>
+<b>imag(cx_mat)</b>
+<br><b>real(cx_mat)</b>
+<ul>
+<li>
+Extract the imaginary/real part of a complex matrix.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+cx_mat A = rand&lt;cx_mat&gt;(5,5);
+mat B = imag(A);
+mat C = real(A);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="reshape"></a>
+<b>reshape(mat, n_rows, n_cols, dim=0)</b>
+<ul>
+<li>
+Return a matrix sized according to supplied <i>n_rows</i> and <i>n_cols</i>,
+whose elements are taken from the given matrix, either column-wise (dim=0) or row-wise (dim=1).
+</li>
+<br>
+<li>
+The number of elements in the given matrix must be equal to <i>n_rows * n_cols</i>.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(10, 5);
+mat B = reshape(A, 5, 10);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="sort"></a>
+<b>sort(mat, sort_type=0, dim=0)</b>
+<br><b>sort(rowvec, sort_type=0)</b>
+<br><b>sort(colvec, sort_type=0)</b>
+<ul>
+<li>For a matrix argument, return a matrix with the elements of the input matrix sorted in each column (<i>dim=0</i>), or each row (<i>dim=1</i>)</li>
+<br>
+<li><i>sort_type=0</i> (default) indicates an ascending sort</li>
+<br>
+<li><i>sort_type=1</i> indicates a descending sort</li>
+<br>
+<li>For a vector argument, return a vector which is a sorted version of the input vector</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(10,10);
+mat B = sort(A);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="sort_index"></a>
+<b>sort_index(colvec, sort_type=0)</b>
+<br><b>sort_index(rowvec, sort_type=0)</b>
+<ul>
+<li>Sort the given vector and return a vector (with elements of type u32) which describes the sorted order
+(i.e. it contains the indices of the given vector's elements).
+</li>
+<br>
+<li><i>sort_type=0</i> (default) indicates an ascending sort</li>
+<br>
+<li><i>sort_type=1</i> indicates a descending sort</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+colvec  q       = rand&lt;colvec&gt;(10);
+ucolvec indices = sort_index(q);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="trans"></a>
+<b>trans(mat)</b>
+<br><b>trans(colvec)</b>
+<br><b>trans(rowvec)</b>
+<ul>
+<li>
+Matrix transpose
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>mat A = rand&lt;mat&gt;(5,10);
+mat B = trans(A);
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr>
+
+<hr>
+<br>
+<br>
+<font size=+1><b>Decompositions and Related Functions</b></font>
+<br>
+<br>
+<hr>
+<br>
+
+<a name="chol"></a>
+<b>chol(R, X)</b>
+<br><b>R = chol(X)</b>
+<ul>
+<li>
+Cholesky decomposition of <i>X</i>, such that trans(R)*R = X.
+</li>
+<br>
+<li>
+X must be a symmetric, positive-definite matrix.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat X = rand&lt;mat&gt;(5,5);
+mat Y = trans(X)*X;
+
+mat R = chol(Y);
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also: <a href="http://mathworld.wolfram.com/CholeskyDecomposition.html">Cholesky decomposition in MathWorld</a>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="eig_sym"></a>
+<b>eig_sym(colvec eigval, mat X)</b>
+<br><b>eig_sym(colvec eigval, cx_mat X)</b>
+<br>
+<br><b>colvec eigval = eig_sym(mat X)</b>
+<br><b>colvec eigval = eig_sym(cx_mat X)</b>
+<br>
+<br><b>eig_sym(colvec eigval, mat eigvec, mat X)</b>
+<br><b>eig_sym(colvec eigval, cx_mat eigvec, cx_mat X)</b>
+<ul>
+<li>
+Eigen decomposition of symmetric/hermitian matrix <i>X</i>.</li>
+<br>
+<li>The eigenvalues and corresponding eigenvectors are stored in <i>eigval</i> and <i>eigvec</i>, respectively.</li>
+<br>
+<li>
+The eigenvalues are not guaranteed to be ordered.
+</li>
+<br>
+<li>
+An exception is thrown if <i>X</i> is not square.
+</li>
+<br>
+<li>
+There is currently no check for symmetry of X.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(10,10);
+mat B = trans(A)*A;  // generate a symmetric matrix
+
+colvec eigval;
+mat    eigvec;
+
+eig_sym(eigval, eigvec, B);
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also: <a href="http://mathworld.wolfram.com/EigenDecomposition.html">eigen decomposition in MathWorld</a>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="eig_gen"></a>
+<b>eig_gen(cx_colvec eigval, cx_mat eigvec, mat X, side='r')</b>
+<br>
+<b>eig_gen(cx_colvec eigval, cx_mat eigvec, cx_mat X, side='r')</b>
+<br>
+<br>
+<b>eig_gen(cx_colvec eigval, mat l_eigvec, mat r_eigvec, mat X)</b>
+<br>
+<b>eig_gen(cx_colvec eigval, cx_mat l_eigvec, cx_mat r_eigvec, cx_mat X)</b>
+<ul>
+<li>
+Eigen decomposition of general (non-symmetric/non-hermitian) square matrix <i>X</i>.</li>
+<br>
+<li>The eigenvalues and corresponding eigenvectors are stored in <i>eigval</i> and <i>eigvec</i>, respectively.</li>
+<br>
+<li>For the first two forms, <i>side='r'</i> (default) specifies that right eigenvectors are computed, while <i>side='l'</i> specifies that left eigenvectors are computed.</li>
+<br>
+<li>For the last two forms, both left and right eigenvectors are computed.</li>
+<br>
+<li>
+The eigenvalues are not guaranteed to be ordered.
+</li>
+<br>
+<li>
+An exception is thrown if <i>X</i> is not square.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(10,10);
+
+cx_colvec eigval;
+cx_mat    eigvec;
+
+eig_gen(eigval, eigvec, A);
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also: <a href="http://mathworld.wolfram.com/EigenDecomposition.html">eigen decomposition in MathWorld</a>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="inv"></a>
+<b>inv(mat)</b>
+<ul>
+<li>
+Inverse of a square matrix.
+</li>
+<br>
+<li>
+An exception is thrown if the given matrix is not square or is rank deficient.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(5,5);
+mat B = inv(A);
+
+// Diagonal elements in C are set to the reciprocal
+// of the corresponding elements in A. Off-diagonal
+// elements of C are set to zero.
+mat C = inv(diagmat(A));
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also: 
+<ul>
+<li><a href="#solve">solve()</a></li>
+<li><a href="http://mathworld.wolfram.com/MatrixInverse.html">matrix inverse in MathWorld</a></li>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+
+
+<a name="lu"></a>
+<b>lu(mat L, mat U, mat P, mat X)</b>
+<ul>
+<li>
+Lower-upper decomposition (with partial pivoting) of matrix <i>X</i>,
+such that <i>P*X = L*U</i> and <i>X = trans(P)*L*U</i>.
+</li>
+<br>
+<li>
+<i>P</i> is a permutation matrix, <i>L</i> is a lower-triangular matrix, and <i>U</i> is an upper-triangular matrix.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A = rand&lt;mat&gt;(10,10);
+
+mat L;
+mat U;
+mat P;
+
+lu(L, U, P, A);
+
+mat B = trans(P)*L*U;
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also: <a href="http://en.wikipedia.org/wiki/LU_decomposition">LU decomposition in Wikipedia</a>
+</li>
+</ul>
+<br>
+<hr><br>
+
+
+
+<a name="qr"></a>
+<b>qr(Q,R,X)</b>
+<ul>
+<li>
+Decomposition of matrix X into an orthogonal (Q) and a right triangular matrix (R), such that Q*R = X.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat X = rand&lt;mat&gt;(5,5);
+mat Q, R;
+
+qr(Q,R,X);
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also: <a href="http://mathworld.wolfram.com/QRDecomposition.html">QR decomposition in MathWorld</a>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="solve"></a>
+<b>solve(colvec x, mat A, colvec b)</b> 
+<br><b>solve(mat X, mat A, mat B)</b>, 
+<br>
+<br><b>colvec x = solve(mat A, colvec b)</b>
+<br><b>mat X = solve(mat A, mat B)</b>
+<ul>
+<li>Solve a system of linear equations, i.e., A*X = B, where X is unknown.</li>
+<br>
+<li>For a square matrix A, this function is conceptually the same as X = inv(A)*B, but is done more efficiently.</li>
+<br>
+<li>The number of rows in A and B must be the same.</li>
+<br>
+<li>This function will also try to provide approximate solutions to under-determined as well as over-determined systems (non-square A matrices).</li>
+<br>
+<li>Similar functionality to the "\" (left division operator) operator in Matlab/Octave, i.e., X  = A\B.</li>
+<br>
+<li>
+<b>NOTE:</b> ATLAS 3.6 provides an implementation of the LAPACK library that may crash when solving under/over determined systems.
+Later versions of ATLAS may work (not yet tested).
+Using the standard LAPACK library works without problems.
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat A    = rand&lt;mat&gt;(5,5);
+colvec b = rand&lt;colvec&gt;(5);
+mat B    = rand&lt;mat&gt;(5,5);
+
+colvec x = solve(A,b);
+mat X    = solve(A,B);
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also: <a href="http://mathworld.wolfram.com/LinearSystemofEquations.html">linear system of equations in MathWorld</a>
+</li>
+</ul>
+<br>
+<hr><br>
+
+
+<a name="svd"></a>
+<b>svd(colvec s, mat X)</b>, 
+<br><b>svd(colvec s, cx_mat X)</b> 
+<br>
+<br><b>colvec s = svd(mat X)</b>
+<br><b>colvec s = svd(cx_mat X)</b>
+<br>
+<br><b>svd(mat U, colvec s, mat V, mat X)</b>
+<br><b>svd(cx_mat U, colvec s, cx_mat V, cx_mat X)</b>
+<ul>
+<li>
+The single- and two-argument versions compute the singular values of X
+</li>
+<br>
+<li>
+The three argument version computes the singular value decomposition of X, such that:
+<ul>
+<li>X = U*diagmat(s)*trans(V), if X has real numbers</li>
+<li>X = U*diagmat(s)*htrans(V), if X has complex numbers</li>
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat X = rand&lt;mat&gt;(5,5);
+
+mat U;
+colvec s;
+mat V;
+svd(U,s,V,X);
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also: <a href="http://mathworld.wolfram.com/SingularValueDecomposition.html">singular value decomposition in MathWorld</a>
+</li>
+</ul>
+<br>
+<hr>
+
+
+
+<hr>
+<br>
+<br>
+<font size=+1><b>Miscellaneous</b></font>
+<br>
+<br>
+<hr>
+<br>
+
+<a name="math_constants"></a>
+<b>math constants (pi, e, euler, gratio, sqrt2, eps, log_min, log_max)</b>
+<br>
+<br>
+<ul>
+<li>
+Collection of constants, with their precision and/or value dependant on the numerical type and/or machine used.
+</li>
+<br>
+<li>
+The constants are stored as static functions in the <i>Math&lt;type&gt;</i> class,
+where <i>type</i> is either <i>float</i> or <i>double</i>.
+</li>
+<br>
+<li>
+For convenience, <i>Math&lt;float&gt;</i> has been typedefed as <i>fmath</i>,
+while <i>Math&lt;double&gt;</i> has been typedefed as <i>math</i>.
+</li>
+<br>
+<li>
+Meaning of the constants:
+<ul>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+  <tr>
+    <td style="vertical-align: top;">
+      math::pi()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      &pi;, the ratio of any circle's circumference to its diameter
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      math::e()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      base of the natural logarithm
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      math::euler()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Euler's constant, aka Euler-Mascheroni constant
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      math::gratio()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      golden ratio
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      math::sqrt2()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      square root of 2
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      math::eps()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      the difference between 1 and the least value greater than 1 that is representable
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      math::log_min()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      log of minimum non-zero value
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      math::log_max()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      log of maximum value
+    </td>
+  </tr>
+</tbody>
+</table>
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+cout &lt;&lt; "2.0 * pi = " &lt;&lt; 2.0 * math::pi() &lt;&lt; endl;
+cout &lt;&lt; "log_max, when using floats  = " &lt;&lt; fmath::log_max() &lt;&lt; endl;
+cout &lt;&lt; "log_max, when using doubles = " &lt;&lt;  math::log_max() &lt;&lt; endl;
+</pre>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="phys_constants"></a>
+<b>physical constants (speed of light, etc)</b>
+<br>
+<br>
+<ul>
+<li>
+Collection of fundamental physical constants,
+mainly taken from
+<a href="http://physics.nist.gov/cuu/Constants">NIST</a>
+and some from
+<a href="http://www.wolframalpha.com">WolframAlpha</a>
+on 2009-06-23.
+</li>
+<br>
+<li>
+Constants from NIST are in turn sourced from the <a href="http://physics.nist.gov/cuu/Constants/papers.html">2006 CODATA values</a>.
+</li>
+<br>
+<li>
+The constants are stored as static functions in the <i>Phy&lt;type&gt;</i> class,
+where <i>type</i> is either <i>float</i> or <i>double</i>.
+</li>
+<br>
+<li>
+For convenience, <i>Phy&lt;float&gt;</i> has been typedefed as <i>fphy</i>,
+while <i>Phy&lt;double&gt;</i> has been typedefed as <i>phy</i>.
+</li>
+<br>
+<li>
+Meaning of the constants:
+<ul>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::m_u()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      atomic mass constant (in kg)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::N_A()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Avogadro constant
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::k()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Boltzmann constant (in joules per kelvin)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::k_evk()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Boltzmann constant (in eV/K)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::a_0()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Bohr radius (in meters)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::mu_B()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Bohr magneton
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::Z_0()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      characteristic impedance of vacuum (in ohms)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::G_0()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      conductance quantum (in siemens)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::k_e()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Coulomb's constant (in meters per farad)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::eps_0()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      electric constant (in farads per meter)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::m_e()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      electron mass (in kg)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::eV()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      electron volt (in joules)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::e()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      elementary charge (in coulombs)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::F()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Faraday constant (in coulombs)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::alpha()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      fine-structure constant
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::alpha_inv()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      inverse fine-structure constant
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::K_J()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Josephson constant
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::mu_0()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      magnetic constant (in henries per meter)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::phi_0() 
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      magnetic flux quantum (in webers)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::R()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      molar gas constant (in joules per mole kelvin)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::G()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Newtonian constant of gravitation (in newton square meters per kilogram squared)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::h() 
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Planck constant (in joule seconds)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::h_bar()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Planck constant over 2 pi, aka reduced Planck constant (in joule seconds)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::m_p()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      proton mass (in kg)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::R_inf()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Rydberg constant (in reciprocal meters)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::c_0()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      speed of light in vacuum (in meters per second)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::sigma()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Stefan-Boltzmann constant
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::R_k()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      von Klitzing constant (in ohms)
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      phy::b()
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      Wien wavelength displacement law constant
+    </td>
+  </tr>
+</tbody>
+</table>
+</ul>
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+cout &lt;&lt; "speed of light = " &lt;&lt; phy::c_0() &lt;&lt; endl;
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also: <a href="http://en.wikipedia.org/wiki/Physical_constant">physical constant</a> entry in Wikipedia.
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="log_add"></a>
+<b>log_add(log_a, log_b)</b>
+</b>
+<ul>
+<li>
+Safe replacement for log(exp(log_a) + exp(log_b))
+</li>
+<br>
+<li>
+Usage:
+<ul>
+<li>
+<i>scalar_type</i> log_c = log_add(log_a, log_b)
+</li>
+<li>
+<i>scalar_type</i> is either <i>float</i> or <i>double</i>
+</li>
+<li>
+log_a, log_b and log_c must have the same type
+</li>
+</ul>
+</li>
+</ul>
+<br>
+<hr><br>
+
+<a name="s32_u32"></a>
+<b>s32</b>, <b>u32</b>
+</b>
+<ul>
+<li>
+s32 is a typedef for a 32 bit wide signed int
+</li>
+<br>
+<li>
+u32 is a typedef for a 32 bit wide unsigned int
+</li>
+<br>
+</ul>
+<br>
+<hr><br>
+
+<a name="cx_float"></a>
+<b>cx_float</b>, <b>cx_double</b>
+</b>
+<ul>
+<li>
+cx_float is a typedef for std::complex&lt;float&gt;
+</li>
+<br>
+<li>
+cx_double is a typedef for std::complex&lt;double&gt;
+</li>
+<br>
+</ul>
+
+
+<!-- END CONTENT -->
+
+
+<hr>
+<br>
+<br>
+</div>
+
+</td>
+</tr>
+</tbody>
+</table>
+</center>
+</body>
+</html>
