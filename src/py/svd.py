@@ -22,25 +22,31 @@ def main():
     del dimmap
     gc.collect()
 
-    A, user_vectors = build_matrix(sys.stdin, user_counts)
-    
+    datafile = open('../../dat/mapped_data.txt')
+    A, user_vectors = build_matrix(datafile, user_counts)
+    datafile.close()
 
-    svd = divisi.svd.svd_sparse(A, 200)
+    svd = divisi.svd.svd_sparse(A, 250)
     debug("SVD FINISHED!")
 
-    
     main_vector = numpy.zeros(num_repos)
     num = 0
     svd_matrix = svd.weighted_v.transpose()
-    for user, user_vector in user_vectors.iteritems():
+    for user in sys.stdin:
         start_time = time.time()
+        user = int(user.rstrip())
+        try:
+            user_vector =  user_vectors[user]
+        except KeyError:
+            continue
         main_vector[:] = 0
+
         for key, value in user_vector.iteritems():
             main_vector[key] = value
         print get_suggestions(user, main_vector, svd_matrix)
         num += 1
         t = time.time() - start_time
-        if num % 10 == 0:
+        if num % 100 == 0:
             debug("%s took %0.3fs %0.2f min remaining." % (
                     user, t, (num_users - num) * t / 60.0)
                   )

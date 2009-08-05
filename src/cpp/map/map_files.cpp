@@ -75,8 +75,12 @@ int main(int argc, char **argv)
 void map_file(istream *datafile, DimInfo *dims)
 {
   for (string line; getline(*datafile, line);) {
-    if (line.rfind(":") == string::npos)
+    if (line.rfind(":") == string::npos) {
+      if (dims->user_to.count(line)) {
+        cout << dims->user_to[line] << endl;
+      }
       continue;
+    }
 
     boost::char_delimiters_separator < char >sep(false, "", ":");
     boost::tokenizer <> line_toks(line, sep);
