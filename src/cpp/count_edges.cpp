@@ -10,7 +10,6 @@
 using namespace boost;
 
 #define MIN_OVERLAP 1
-
 int main()
 {
   std::map<std::string, int> edge_counts;

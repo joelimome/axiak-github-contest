@@ -1,2 +1,2 @@
 lsi: *.cpp *.h
-	c++ -O3 -Wall -pedantic -larmadillo generate_dims.cpp lsi.cpp -o lsi
+	c++ -O4 -Wall -pedantic generate_dims.cpp lsi.cpp -o lsi

@@ -65,10 +65,11 @@ DimInfo * generate_dims(ifstream *datafile)
 
 void destroy_dims(DimInfo *diminfo)
 {
-  delete diminfo->user_to;
-  delete diminfo->repos_from;
-  delete diminfo->user_from;
-  delete diminfo->repos_to;
-
-  delete result;
+  /*
+  delete &diminfo->user_to;
+  delete &diminfo->repos_from;
+  delete &diminfo->user_from;
+  delete &diminfo->repos_to;
+  */
+  delete diminfo;
 }
