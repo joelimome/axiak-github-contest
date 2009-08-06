@@ -23,7 +23,7 @@ def main():
     gc.collect()
 
     datafile = open('../../dat/mapped_data.txt')
-    A, user_vectors = build_matrix(datafile, user_counts)
+    A, user_vectors, already_mapped = build_matrix(datafile, user_counts)
     datafile.close()
 
     svd = divisi.svd.svd_sparse(A, 250)
@@ -43,7 +43,7 @@ def main():
 
         for key, value in user_vector.iteritems():
             main_vector[key] = value
-        print get_suggestions(user, main_vector, svd_matrix)
+        print get_suggestions(user, main_vector, svd_matrix, already_mapped)
         num += 1
         t = time.time() - start_time
         if num % 100 == 0:
@@ -51,7 +51,7 @@ def main():
                     user, t, (num_users - num) * t / 60.0)
                   )
 
-def get_suggestions(user, user_vector, svd, top_n=50):
+def get_suggestions(user, user_vector, svd, already_mapped, top_n=50):
     heap = []
     start = time.time()
 
@@ -65,6 +65,9 @@ def get_suggestions(user, user_vector, svd, top_n=50):
     for repo, value in repos.iteritems():
         i += 1
         if not value:
+            continue
+
+        if (user, repo) in already_mapped:
             continue
 
         newval = (value, repo)
@@ -84,14 +87,16 @@ def build_matrix(input, user_counts):
     A = divisi.tensor.DictTensor(2)
 
     user_vectors = defaultdict(lambda : {})
-    
+    already_mapped = set()
+
     for i, line in enumerate(input):
         user, repos = map(int, line.rstrip().split(':'))
         user_vectors[user][repos] = A[(user, repos)] = 1.0 / user_counts[user]
+        already_mapped.add((user, repos))
 
         if i % 10000 == 0:
             debug("Finished with data line %s" % i)
-    return A, user_vectors
+    return A, user_vectors, already_mapped
 
 
 def debug(s, level=0):
