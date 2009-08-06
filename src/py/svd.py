@@ -2,6 +2,7 @@
 import gc
 import sys
 import time
+import os
 
 from collections import defaultdict
 from heapq import heappush, heapreplace
@@ -26,7 +27,11 @@ def main():
     A, user_vectors, already_mapped = build_matrix(datafile, user_counts)
     datafile.close()
 
-    svd = divisi.svd.svd_sparse(A, 250)
+    newstdout = os.dup(1)
+    os.dup2(2, 1)
+    svd = divisi.svd.svd_sparse(A, 20)
+    os.dup2(newstdout, 1)
+    os.close(newstdout)
     debug("SVD FINISHED!")
 
     main_vector = numpy.zeros(num_repos)
