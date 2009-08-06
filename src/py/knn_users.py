@@ -15,7 +15,7 @@ datadir = os.path.join(os.path.dirname(__file__), '..', '..', 'dat')
 def main():
     dimmap = load_map.load_maps()
 
-    k = 8
+    k = 20
     if len(sys.argv) > 1:
         k = int(sys.argv[0])
 
