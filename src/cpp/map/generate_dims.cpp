@@ -65,6 +65,16 @@ DimInfo * generate_dims(ifstream *datafile)
 
 }
 
+#ifndef DAT_USERMAP
+#define DAT_USERMAP "../../../dat/usermap.dat"
+#endif
+#ifndef DAT_REPOMAP
+#define DAT_REPOMAP "../../../dat/repomap.dat"
+#endif
+#ifndef DAT_USERCOUNT
+#define DAT_USERCOUNT "../../../dat/usercount.dat"
+#endif
+
 DimInfo * read_dims()
 {
   DimInfo *result = new DimInfo;
@@ -78,7 +88,7 @@ DimInfo * read_dims()
 
   int userid = 0, repoid = 0;
 
-  ifstream userfile("../../../dat/usermap.dat");
+  ifstream userfile(DAT_USERMAP);
   for (string line; getline(userfile, line);) {
     if (line.rfind(":") == string::npos)
       continue;
@@ -95,7 +105,7 @@ DimInfo * read_dims()
   }
   userfile.close();
 
-  ifstream repofile("../../../dat/repomap.dat");
+  ifstream repofile(DAT_REPOMAP);
   for (string line; getline(repofile, line);) {
     if (line.rfind(":") == string::npos)
       continue;
@@ -112,7 +122,7 @@ DimInfo * read_dims()
   }
   repofile.close();
 
-  ifstream usercountfile("../../../dat/usercount.dat");
+  ifstream usercountfile(DAT_USERCOUNT);
   for (string line; getline(usercountfile, line);) {
     if (line.rfind(":") == string::npos)
       continue;

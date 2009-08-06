@@ -3,6 +3,7 @@ import gc
 import sys
 import time
 import os
+import math
 
 from collections import defaultdict
 from heapq import heappush, heapreplace
@@ -37,6 +38,7 @@ def main():
     main_vector = numpy.zeros(num_repos)
     num = 0
     svd_matrix = svd.weighted_v.transpose()
+    total = 4786
     for user in sys.stdin:
         start_time = time.time()
         user = int(user.rstrip())
@@ -53,10 +55,10 @@ def main():
         t = time.time() - start_time
         if num % 100 == 0:
             debug("%s took %0.3fs %0.2f min remaining." % (
-                    user, t, (num_users - num) * t / 60.0)
+                    user, t, (total - num) * t / 60.0)
                   )
 
-def get_suggestions(user, user_vector, svd, already_mapped, top_n=50):
+def get_suggestions(user, user_vector, svd, already_mapped, top_n=5):
     heap = []
     start = time.time()
 
@@ -96,7 +98,7 @@ def build_matrix(input, user_counts):
 
     for i, line in enumerate(input):
         user, repos = map(int, line.rstrip().split(':'))
-        user_vectors[user][repos] = A[(user, repos)] = 1.0 / user_counts[user]
+        user_vectors[user][repos] = A[(user, repos)] = user_counts[user]; #1.0; / math.sqrt(user_counts[user])
         already_mapped.add((user, repos))
 
         if i % 10000 == 0:
